@@ -1,20 +1,13 @@
-from rest_framework.viewsets import ModelViewSet
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
+from django.contrib import admin
 from .models import Task
-from .serializers import TaskSerializer
+from django.contrib import admin
 
-class TaskViewSet(ModelViewSet):
-    queryset = Task.objects.all().order_by('-id')
-    serializer_class = TaskSerializer
+@admin.register(Task)
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'status', 'created_at')
+    search_fields = ('title', 'status')
 
-    # Filtres / recherche / tri
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
-    search_fields = ['title', 'status']
-    ordering_fields = ['created_at', 'title']
-    filterset_fields = ['status']
-
-    # AJOUT ICI : méthode d’instance dans la classe
-    def perform_create(self, serializer):
-        user = self.request.user if self.request.user.is_authenticated else None
-        serializer.save(owner=user)
+# Personnalisation de l’en-tête et des titres du site d'administration
+admin.site.site_header = "TaskFlow – Administration"
+admin.site.site_title = "TaskFlow Admin"
+admin.site.index_title = "Tableau de bord – Gestion des tâches"
