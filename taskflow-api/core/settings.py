@@ -27,6 +27,31 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} | {levelname} |  {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": "INFO",  # On ne logge que les erreurs et plus graves
+            "class": "logging.FileHandler",
+            "filename": "logs/taskflow.log",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "INFO",
+            "propagate": True,
+        },
+    }
+}
 
 # Application definition
 
